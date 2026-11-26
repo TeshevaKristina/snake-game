@@ -154,7 +154,7 @@ def handle_keys(snake):
 def main():
     """Основной игровой цикл."""
     pygame.init()
-    
+
     # Используем глобальные переменные для screen и clock.
     global screen
     global clock
