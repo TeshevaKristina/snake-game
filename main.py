@@ -65,7 +65,6 @@ class Snake(GameObject):
         self.direction = (GRID_SIZE, 0)  # По умолчанию движется вправо.
         self.next_direction = None
         self.body_color = GREEN
-        # Атрибут для хранения позиции удаленного хвоста.
         self.last = None
 
     def update_direction(self):
@@ -118,7 +117,7 @@ class Snake(GameObject):
         self.length = 1
         self.positions = [((SCREEN_WIDTH // 2), (SCREEN_HEIGHT // 2))]
         # Случайное направление при перезапуске.
-        directions = [(0, -GRID_SIZE), (0, GRID_SIZE), 
+        directions = [(0, -GRID_SIZE), (0, GRID_SIZE),
                       (-GRID_SIZE, 0), (GRID_SIZE, 0)]
         self.direction = random.choice(directions)
         self.next_direction = None
