@@ -1,4 +1,5 @@
 import random
+
 import pygame
 
 # Размеры игрового окна.
@@ -71,8 +72,8 @@ class Snake(GameObject):
         """Обновляет направление движения змейки."""
         if self.next_direction:
             # Запрещаем разворот на 180 градусов.
-            if (self.next_direction[0] != -self.direction[0] or
-                    self.next_direction[1] != -self.direction[1]):
+            if (self.next_direction[0] != -self.direction[0]
+                    or self.next_direction[1] != -self.direction[1]):
                 self.direction = self.next_direction
             self.next_direction = None
 
@@ -131,13 +132,17 @@ def handle_keys(snake):
             pygame.quit()
             exit()
         elif event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_UP and snake.direction != (0, GRID_SIZE):
+            if (event.key == pygame.K_UP
+                    and snake.direction != (0, GRID_SIZE)):
                 snake.next_direction = (0, -GRID_SIZE)
-            elif event.key == pygame.K_DOWN and snake.direction != (0, -GRID_SIZE):
+            elif (event.key == pygame.K_DOWN
+                    and snake.direction != (0, -GRID_SIZE)):
                 snake.next_direction = (0, GRID_SIZE)
-            elif event.key == pygame.K_LEFT and snake.direction != (GRID_SIZE, 0):
+            elif (event.key == pygame.K_LEFT
+                    and snake.direction != (GRID_SIZE, 0)):
                 snake.next_direction = (-GRID_SIZE, 0)
-            elif event.key == pygame.K_RIGHT and snake.direction != (-GRID_SIZE, 0):
+            elif (event.key == pygame.K_RIGHT
+                    and snake.direction != (-GRID_SIZE, 0)):
                 snake.next_direction = (GRID_SIZE, 0)
 
 
