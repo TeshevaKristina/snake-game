@@ -7,6 +7,8 @@ SCREEN_WIDTH = 640
 SCREEN_HEIGHT = 480
 # Размер одной ячейки сетки.
 GRID_SIZE = 20
+GRID_WIDTH = SCREEN_WIDTH // GRID_SIZE
+GRID_HEIGHT = SCREEN_HEIGHT // GRID_SIZE
 # Количество кадров в секунду.
 FPS = 20
 
@@ -14,6 +16,16 @@ FPS = 20
 BOARD_BACKGROUND_COLOR = (0, 0, 0)
 GREEN = (0, 255, 0)
 RED = (255, 0, 0)
+
+# Направления движения.
+UP = (0, -GRID_SIZE)
+DOWN = (0, GRID_SIZE)
+LEFT = (-GRID_SIZE, 0)
+RIGHT = (GRID_SIZE, 0)
+
+# Глобальные переменные (тесты требуют их наличия).
+screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+clock = pygame.time.Clock()
 
 
 class GameObject:
@@ -42,11 +54,9 @@ class Apple(GameObject):
 
     def randomize_position(self):
         """Устанавливает случайное положение яблока на игровом поле."""
-        max_x = SCREEN_WIDTH // GRID_SIZE - 1
-        max_y = SCREEN_HEIGHT // GRID_SIZE - 1
         self.position = (
-            random.randint(0, max_x) * GRID_SIZE,
-            random.randint(0, max_y) * GRID_SIZE
+            random.randint(0, GRID_WIDTH - 1) * GRID_SIZE,
+            random.randint(0, GRID_HEIGHT - 1) * GRID_SIZE
         )
 
     def draw(self, surface):
@@ -63,7 +73,7 @@ class Snake(GameObject):
         super().__init__()
         self.length = 1
         self.positions = [self.position]
-        self.direction = (GRID_SIZE, 0)  # По умолчанию движется вправо.
+        self.direction = RIGHT
         self.next_direction = None
         self.body_color = GREEN
         self.last = None
@@ -118,8 +128,7 @@ class Snake(GameObject):
         self.length = 1
         self.positions = [((SCREEN_WIDTH // 2), (SCREEN_HEIGHT // 2))]
         # Случайное направление при перезапуске.
-        directions = [(0, -GRID_SIZE), (0, GRID_SIZE),
-                      (-GRID_SIZE, 0), (GRID_SIZE, 0)]
+        directions = [UP, DOWN, LEFT, RIGHT]
         self.direction = random.choice(directions)
         self.next_direction = None
         self.last = None
@@ -132,26 +141,25 @@ def handle_keys(snake):
             pygame.quit()
             exit()
         elif event.type == pygame.KEYDOWN:
-            if (event.key == pygame.K_UP
-                    and snake.direction != (0, GRID_SIZE)):
-                snake.next_direction = (0, -GRID_SIZE)
-            elif (event.key == pygame.K_DOWN
-                    and snake.direction != (0, -GRID_SIZE)):
-                snake.next_direction = (0, GRID_SIZE)
-            elif (event.key == pygame.K_LEFT
-                    and snake.direction != (GRID_SIZE, 0)):
-                snake.next_direction = (-GRID_SIZE, 0)
-            elif (event.key == pygame.K_RIGHT
-                    and snake.direction != (-GRID_SIZE, 0)):
-                snake.next_direction = (GRID_SIZE, 0)
+            if event.key == pygame.K_UP and snake.direction != DOWN:
+                snake.next_direction = UP
+            elif event.key == pygame.K_DOWN and snake.direction != UP:
+                snake.next_direction = DOWN
+            elif event.key == pygame.K_LEFT and snake.direction != RIGHT:
+                snake.next_direction = LEFT
+            elif event.key == pygame.K_RIGHT and snake.direction != LEFT:
+                snake.next_direction = RIGHT
 
 
 def main():
     """Основной игровой цикл."""
     pygame.init()
+    
+    # Используем глобальные переменные для screen и clock.
+    global screen
+    global clock
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     pygame.display.set_caption('Змейка')
-    clock = pygame.time.Clock()
 
     snake = Snake()
     apple = Apple()
